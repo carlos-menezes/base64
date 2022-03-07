@@ -1,3 +1,5 @@
+use std::ops::Index;
+
 use crate::err::Base64Error;
 
 const BASE64_PAD: u8 = 0x3D;
@@ -79,4 +81,36 @@ where
     }
 
     Ok(cipher)
+}
+
+pub fn decode<T>(input: T) -> Result<String, Base64Error>
+where
+    T: AsRef<str>,
+{
+    let mut decipher = String::with_capacity(input.as_ref().len() * 3 / 4);
+    let mut count: usize = 0;
+    let mut buffer = [0u8; 4];
+    let input_bytes = input.as_ref().as_bytes();
+    for i in (0..input_bytes.len()).into_iter() {
+        let char_index = BASE64_CHARMAP
+            .iter()
+            .position(|&p| p == input_bytes[i] as char)
+            .unwrap_or(65);
+        buffer[count] = char_index as u8;
+        count += 1;
+        if count == 4 {
+            decipher.push(((buffer[0] << 2) | (buffer[1] >> 4)) as char);
+            if buffer[2] != 65 {
+                decipher.push(((buffer[1] << 4) | (buffer[2] >> 2)).into());
+            }
+
+            if buffer[3] != 65 {
+                decipher.push(((buffer[2] << 6) | buffer[3]).into());
+            }
+
+            count = 0;
+        }
+    }
+
+    Ok(decipher)
 }
