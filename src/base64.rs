@@ -67,7 +67,7 @@ where
 
         for b in split_bits {
             if b == BASE64_PAD {
-                cipher.push('=');
+                cipher.push(BASE64_PAD as char);
             } else {
                 match get_char_from_index(b) {
                     Ok(c) => {
