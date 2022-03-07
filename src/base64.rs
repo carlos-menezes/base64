@@ -15,7 +15,7 @@ fn get_char_from_index(index: u8) -> Result<char, Base64Error> {
     }
 }
 
-pub fn base64_encode<T>(input: T) -> Result<String, Base64Error>
+pub fn encode<T>(input: T) -> Result<String, Base64Error>
 where
     T: AsRef<str>,
 {
@@ -23,7 +23,7 @@ where
     let mut buffer = [0u8; 3];
     let mut count: usize = 0;
     let input_bytes = input.as_ref().as_bytes();
-    (0..input_bytes.len()).into_iter().for_each(|i| {
+    for i in (0..input_bytes.len()).into_iter() {
         buffer[count] = input_bytes[i];
         count += 1;
         if count == 3 {
@@ -40,16 +40,16 @@ where
                         cipher.push(c);
                     }
                     Err(e) => {
-                        e;
+                        return Err(e);
                     }
                 }
             }
 
             count = 0;
         }
-    });
+    }
 
-    /// Last group of bytes is not 3-byte long
+    // Last group of bytes is not 3-byte long
     if count > 0 {
         let mut split_bits = [buffer[0] >> 2, 0, 0, 0];
         if count == 1 {
@@ -71,7 +71,7 @@ where
                         cipher.push(c);
                     }
                     Err(e) => {
-                        e;
+                        return Err(e);
                     }
                 }
             }
