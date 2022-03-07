@@ -4,6 +4,6 @@ use thiserror::Error;
 pub enum Base64Error {
     #[error("index out of bounds")]
     OutOfBounds,
-    #[error("invalid character `{character:?}`")]
-    Encode { character: char },
+    #[error("invalid character (not ASCII)")]
+    Encode,
 }
