@@ -17,7 +17,7 @@ fn get_char_from_index(index: u8) -> Result<char, Base64Error> {
     }
 }
 
-/// Encodes ASCCI string into base64 format string
+/// Encodes ASCII string into base64 format string
 pub fn encode<T>(input: T) -> Result<String, Base64Error>
 where
     T: AsRef<str>,
@@ -84,7 +84,7 @@ where
     Ok(cipher)
 }
 
-/// Decodes base64 format string into ASCCI string
+/// Decodes base64 format string into ASCII string
 pub fn decode<T>(input: T) -> Result<String, Base64Error>
 where
     T: AsRef<str>,
